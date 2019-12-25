@@ -7,10 +7,10 @@ import asyncio
 
 ### Action Type
 Action = {
-    0 : (0, 5), # 상
-    1 : (0, -5), # 하
-    2 : (-5, 0), # 좌
-    3 : (5, 0) # 우
+    'top' : (0, 5), # 상
+    'bottom' : (0, -5), # 하
+    'left' : (-5, 0), # 좌
+    'right' : (5, 0) # 우
 }
 
 class CoreEnv(gym.Env):
