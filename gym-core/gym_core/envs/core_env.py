@@ -41,15 +41,19 @@ class CoreEnv(gym.Env):
         done = False
         info = {} # 사용하지 않음
 
+        index = 0
         for node_action in action:
             # For Observation
             observation.append(node_action)
 
             # For Reward
-            reward.append(...)
+            reward.append(self.__calculate_reward(self.prev_signal_quality[index], self.signal_quality[index]))
+            print(reward)
 
             # For Done
             done = False
+
+            index = index + 1
         # for node_action in action:
             # node들에 대한 action을 뽑아오기
         # next_state, reward, done, info = self.env.step(action)
@@ -92,8 +96,17 @@ class CoreEnv(gym.Env):
     def close(self):
         self.__loop = None
 
-    def __calculate_reward(self):
-        return
+    def __calculate_reward(self, prev, signal):
+        key_list = list(prev.keys())
+        reward = 0
+
+        for key in key_list:
+            if prev[key] >= signal[key]:
+                reward = reward + 1
+            else:
+                reward = reward - 1
+
+        return reward
 
 class CoreAction(gym.ActionWrapper):
     def __init__(self):
