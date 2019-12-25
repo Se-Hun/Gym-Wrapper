@@ -75,6 +75,7 @@ class CoreEnv(gym.Env):
                 self.signal_quality = []
                 for node in nodes:
                     self.signal_quality.append(node.get_signal_quality_dict())
+                    print(self.signal_quality)
                     if self.__state == None:
                         direction = Action['stop']
                     else:
