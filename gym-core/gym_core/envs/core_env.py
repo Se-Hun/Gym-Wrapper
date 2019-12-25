@@ -122,12 +122,15 @@ class CoreAction(gym.ActionWrapper):
     def action(self, act):
         return act
 
-    def sample(self, n):
+    def sample(self, n, reward, prev_action):
         self.number_of_nodes = n
         act = []
         for i in range(n):
-            choice = np.random.randint(5)
-            act.append(ActionType[choice])
+            if reward[i] > 0:
+                act.append(prev_action[i])
+            else:
+                choice = np.random.randint(5)
+                act.append(ActionType[choice])
         return act
 
 
