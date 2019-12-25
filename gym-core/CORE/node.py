@@ -35,6 +35,7 @@ UNKNOWN = -9999
 
 class Node():
     def __init__(self, run_mode=REAL_MODE, configuration_file=None, log_file='logtest'):
+        self.__signal_quality_dict = {} # signal을 저장하기 위해서 추가함
         self.__nt_int = 'wlan0'
         self.__run_mode = run_mode
         self.__configuration_file = configuration_file
@@ -434,11 +435,19 @@ class Node():
         # tentacle_within_pos = data.get('tentacle_within_pos')
 
         node_signal = self.__get_signal_quality(node_mac, node_position_x, node_position_y)
-
+        
+        # signal_quality를 저장하기 위해 추가한 코드임
+        self.__signal_quality_dict[node_id] = node_signal
+        # signal_quality_keys = list(self.__signal_quality_dict.keys())
+        # if node_id in signal_quality_keys:
+        #     self.__signal_quality_dict[node_id] = node_signal
+        # else:
+        #     self.__signal_quality_dict
         # Test를 위해 node_signal을 반환하도록 함
-        print(str(node_id) + ": " + str(node_mac) + ", " + str(node_position_x) + ", " + str(node_position_y) + ", " + str(node_signal))
-        return node_signal
+        # print(str(node_id) + ": " + str(node_mac) + ", " + str(node_position_x) + ", " + str(node_position_y) + ", " + str(node_signal))
+        # return node_signal
 
+        ''' 이 부분은 일단 생략
         log = f"-- From : {node_mac} / SQ : {node_signal} / node_id : {node_id}, node_state : {node_state}, node_position_x : {node_position_x}, node_position_y : {node_position_y}, tentacle_id : {tentacle_id}, tentacle_state : {tentacle_state} tentacle_within_pos : {tentacle_within_pos}"
 
         print(log)
@@ -460,6 +469,7 @@ class Node():
         self.__add_node_status(node_id, node_state, node_position_x, node_position_y, node_signal, tentacle_id,
                                tentacle_state, tentacle_within_pos)
         # self.__update_status(node_id, node_state, node_signal, tentacle_id, tentacle_state, tentacle_within_pos)
+        '''
 
 
     # About communication
@@ -469,3 +479,9 @@ class Node():
         sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
         self.__broadcast()
+
+
+    # signal_quality Dictionary를 받아오기 위해서 추가함
+    def get_signal_quality_dict(self):
+        return self.__signal_quality_dict
+
