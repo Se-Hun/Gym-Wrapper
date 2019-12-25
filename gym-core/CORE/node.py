@@ -436,7 +436,7 @@ class Node():
         node_signal = self.__get_signal_quality(node_mac, node_position_x, node_position_y)
 
         # Test를 위해 node_signal을 반환하도록 함
-        print(node_signal)
+        print(node_position_x + ", " + node_position_y + ", " + node_signal)
         return node_signal
 
         log = f"-- From : {node_mac} / SQ : {node_signal} / node_id : {node_id}, node_state : {node_state}, node_position_x : {node_position_x}, node_position_y : {node_position_y}, tentacle_id : {tentacle_id}, tentacle_state : {tentacle_state} tentacle_within_pos : {tentacle_within_pos}"
