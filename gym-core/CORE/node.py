@@ -438,38 +438,7 @@ class Node():
         
         # signal_quality를 저장하기 위해 추가한 코드임
         self.__signal_quality_dict[node_id] = node_signal
-        # signal_quality_keys = list(self.__signal_quality_dict.keys())
-        # if node_id in signal_quality_keys:
-        #     self.__signal_quality_dict[node_id] = node_signal
-        # else:
-        #     self.__signal_quality_dict
-        # Test를 위해 node_signal을 반환하도록 함
         # print(str(node_id) + ": " + str(node_mac) + ", " + str(node_position_x) + ", " + str(node_position_y) + ", " + str(node_signal))
-        # return node_signal
-
-        ''' 이 부분은 일단 생략
-        log = f"-- From : {node_mac} / SQ : {node_signal} / node_id : {node_id}, node_state : {node_state}, node_position_x : {node_position_x}, node_position_y : {node_position_y}, tentacle_id : {tentacle_id}, tentacle_state : {tentacle_state} tentacle_within_pos : {tentacle_within_pos}"
-
-        print(log)
-
-        # write data to log.file
-        timestr = time.strftime("%Y%m%d-%H%M%S")
-        try:
-            if not (os.path.isdir(self.__log_directory)):
-                os.makedirs(os.path.join(self.__log_directory))
-        except OSError as e:
-            if e.errno != errno.EEXIST:
-                print("Failed to create directory !")
-                raise
-
-        with open(f'{os.getcwd()}/logs/{self.__id}_{self.__log_file}.log', 'a') as f:
-            log = f'{timestr} ID {self.__id} X {self.__position_x} Y {self.__position_y} STATE {self.__state} \n' + log + '\n'
-            f.write(log)
-
-        self.__add_node_status(node_id, node_state, node_position_x, node_position_y, node_signal, tentacle_id,
-                               tentacle_state, tentacle_within_pos)
-        # self.__update_status(node_id, node_state, node_signal, tentacle_id, tentacle_state, tentacle_within_pos)
-        '''
 
 
     # About communication

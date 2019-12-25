@@ -5,13 +5,6 @@ from gym.utils import seeding
 import os
 import asyncio
 import numpy as np
-import json
-from socket import *
-from typing import Tuple
-
-from BioAIR.Drones.State import NodeState, TentacleState, EtcState
-
-Address = Tuple[str, int]
 
 ### Action Type
 Action = {
@@ -27,9 +20,6 @@ class CoreEnv(gym.Env):
     metadata = {'render.modes':['REAL', 'CORE']}
 
     def __init__(self):
-        # super().__init__(env)
-        # self.env = env
-        # self.nodes = nodes # node들에 대한 리스트
         self.__loop = asyncio.get_event_loop()
         self.action_space = CoreAction()
         self.prev_signal_quality = []
@@ -55,18 +45,8 @@ class CoreEnv(gym.Env):
                 reward.append(self.__calculate_reward(self.prev_signal_quality[index], self.signal_quality[index]))
                 done = self.__checkDone(self.prev_signal_quality[index], self.signal_quality[index])
 
-            # print(reward)
-
-            # # For Done
-            # if self.prev_signal_quality == self.signal_quality:
-            #     done = True
-
             index = index + 1
 
-        # for node_action in action:
-            # node들에 대한 action을 뽑아오기
-        # next_state, reward, done, info = self.env.step(action)
-        ## modify ...
         return observation, reward, done, info
 
     def reset(self):
@@ -94,14 +74,9 @@ class CoreEnv(gym.Env):
 
                     self.__loop.run_until_complete(node.update_location(vel_x, vel_y)) # 100, 200이런식으로 들어가야함!
                     index = index + 1
-            # elif mode == 'REAL':
-            #     for node in nodes:
-            #         self.__loop.run_until_complete(node.update_location(100, 200))
         else:
             print("Termination Rendering")
             return
-        # Render 함수에서 각각의 node의 id, state, tentacle_state, position_x, position_y를 받아서 이 함수를 호출하여 CORE-GUI를 갱신해주게 하자!
-        # __update_location() 이용!!
 
     def close(self):
         self.__loop = None
@@ -132,6 +107,7 @@ class CoreEnv(gym.Env):
 
         return False
 
+
 class CoreAction(gym.ActionWrapper):
     def __init__(self):
         self.number_of_nodes = 0
@@ -149,23 +125,3 @@ class CoreAction(gym.ActionWrapper):
                 choice = np.random.randint(5)
                 act.append(ActionType[choice])
         return act
-
-
-'''
-class Observation(gym.ObservationWrapper):
-    def __init__(self, env):
-        super().__init__(env)
-
-    def observation(self, obs):
-        # modify obs
-        return obs
-
-
-class Reward(gym.RewardWrapper):
-    def __init__(self, env):
-        super().__init__(env)
-
-    def reward(self, rew):
-        # modify rew
-        return rew
-'''
