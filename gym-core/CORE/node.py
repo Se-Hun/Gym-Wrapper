@@ -4,6 +4,7 @@ import configparser
 import math
 import json
 import time
+from typing import Tuple
 
 from BioAIR.Drones.Exception import (
     ConnectionToDroneException
