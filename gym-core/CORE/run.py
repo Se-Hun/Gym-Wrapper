@@ -5,6 +5,7 @@ from node import Node
 import os
 
 Node_list = []
+Number_of_Nodes = 2
 
 if __name__ == "__main__":
     # generate Node object
@@ -13,8 +14,9 @@ if __name__ == "__main__":
     node1 = Node(0, os.getcwd() + '/config_drone1.ini', 'simple_test4')
     node2 = Node(0, os.getcwd() + '/config_drone2.ini', 'simple_test4')
 
-    Node_list.append(origin)
-    Node_list.append(destination)
+    # origin과 destination은 정지해있는다고 가정하자!
+    # Node_list.append(origin)
+    # Node_list.append(destination)
     Node_list.append(node1)
     Node_list.append(node2)
 
@@ -24,17 +26,18 @@ if __name__ == "__main__":
     # node1.run(0)
     # node2.run(0)
 
-    # Running Gym-Wrapper
+    # Running Gym-Wrapper For CORE
     env = gym.make('core-v0')
     for i_episode in range(20):
         observation = env.reset()
 
         # test
-        observation = ["top", "bottom", "left", "right"]
+        # observation = ["bottom", "left"]
         for t in range(100):
             env.render(nodes=Node_list, next_state=observation)
             # print(observation)
-            action = env.action_space.sample()
+            action = env.action_space.sample(Number_of_Nodes) # Node 갯수로 action 받아옴
+            print(action)
             observation, reward, done, info = env.step(action)
             if done:
                 print("Episode finished after {} timesteps".format(t+1))
