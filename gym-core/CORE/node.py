@@ -324,6 +324,29 @@ class Node():
         elif self.__run_mode == 2:
             pass
 
+    def __update_destination(self, dest_id, update_type):
+        done = False
+
+        if update_type > 0:
+            self.__destinations.append(dest_id)
+        elif update_type < 0:
+            if update_type == UNKNOWN:
+                self.__dest_index = 0
+            else:
+                self.__dest_index += 1
+
+            if self.__dest_index >= len(self.__destinations):
+                self.__dest_index = len(self.__destinations) - 1
+                done = True
+
+            elif dest_id == UNKNOWN:
+                self.__dest_index -= 1
+
+        # tentacle id를 쓸 필요 없으므로 제거
+        # self.__change_tetacle_id(self.__destinations[self.__dest_index])
+
+        self.__refresh_destination(self.__destinations[self.__dest_index])
+        return done
 
     # Render 함수에서 각각의 node의 id, state, tentacle_state, position_x, position_y를 받아서 이 함수를 호출하여 CORE-GUI를 갱신해주게 하자!
     def __update_core_position(self, node_id, state, tentacle_state, position_x, position_y):
