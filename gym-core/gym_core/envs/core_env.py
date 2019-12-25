@@ -42,7 +42,10 @@ class CoreEnv(gym.Env):
             if mode == 'CORE':
                 index = 0
                 for node in nodes:
-                    self.__loop.run_until_complete(node.update_location(next_state[index])) # 100, 200이런식으로 들어가야함!
+                    direction = Action[next_state[index]]
+                    vel_x, vel_y = direction
+
+                    self.__loop.run_until_complete(node.update_location(vel_x, vel_y)) # 100, 200이런식으로 들어가야함!
                     index = index + 1
             # elif mode == 'REAL':
             #     for node in nodes:
