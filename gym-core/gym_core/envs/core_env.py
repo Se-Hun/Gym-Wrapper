@@ -8,10 +8,10 @@ import asyncio
 class CoreEnv(gym.Env):
     metadata = {'render.modes':['human', 'CORE']}
 
-    def __init__(self, nodes):
+    def __init__(self):
         # super().__init__(env)
         # self.env = env
-        self.nodes = nodes # node들에 대한 리스트
+        # self.nodes = nodes # node들에 대한 리스트
         self.__loop = asyncio.get_event_loop()
 
     def step(self, action):
