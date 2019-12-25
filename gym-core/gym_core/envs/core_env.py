@@ -51,7 +51,11 @@ class CoreEnv(gym.Env):
                 index = 0
                 self.__state = next_state
                 for node in nodes:
-                    direction = Action[self.__state[index]]
+                    if self.__state == None:
+                        direction = Action['stop']
+                    else:
+                        direction = Action[self.__state[index]]
+
                     vel_x, vel_y = direction
 
                     self.__loop.run_until_complete(node.update_location(vel_x, vel_y)) # 100, 200이런식으로 들어가야함!
