@@ -40,7 +40,7 @@ class CoreEnv(gym.Env):
         self.__init__()
         self.__state = None
 
-        return self.state
+        return self.__state
 
     def render(self, mode='CORE', close=False, nodes=None, next_state=None):
         if close == False:
