@@ -19,10 +19,10 @@ if __name__ == "__main__":
     Node_list.append(node2)
 
     # Each drone has their own node object and run.
-    origin.run(0)
-    destination.run(0)
-    node1.run(0)
-    node2.run(0)
+    # origin.run(0)
+    # destination.run(0)
+    # node1.run(0)
+    # node2.run(0)
 
     # Running Gym-Wrapper
     env = gym.make('core-v0')
