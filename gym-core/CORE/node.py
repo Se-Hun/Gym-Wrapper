@@ -362,7 +362,7 @@ class Node():
         os.popen(cmd)
 
     # 신호 세기를 받아오기 위해서
-    def get_signal_quality(self, node_mac, node_position_x, node_position_y):
+    def __get_signal_quality(self, node_mac, node_position_x, node_position_y):
         if self.__run_mode == CORE_MODE:  # CORE
             rxSignal = math.sqrt((self.__position_x - node_position_x) ** 2 + (self.__position_y - node_position_y) ** 2)
 
