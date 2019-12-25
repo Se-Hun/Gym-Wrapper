@@ -19,7 +19,7 @@ if __name__ == "__main__":
     # Node_list.append(destination)
     Node_list.append(node1)
     Node_list.append(node2)
-    
+
     # Each drone has their own node object and run.
     # origin.run(0)
     # destination.run(0)

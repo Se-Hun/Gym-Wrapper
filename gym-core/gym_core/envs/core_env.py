@@ -15,8 +15,8 @@ Address = Tuple[str, int]
 
 ### Action Type
 Action = {
-    'top' : (0, 5), # 상
-    'bottom' : (0, -5), # 하
+    'top' : (0, -5), # 상
+    'bottom' : (0, 5), # 하
     'left' : (-5, 0), # 좌
     'right' : (5, 0), # 우
     'stop' : (0, 0) # 정지
