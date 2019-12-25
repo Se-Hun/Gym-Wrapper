@@ -88,61 +88,6 @@ class CoreEnv(gym.Env):
     def calculate_reward(self):
         return
 
-    # brodcast를 받기 위해서
-    def datagram_received(self, data, addr: Address):
-
-        data = json.loads(data.decode())
-        node_mac = data.get('node_mac')
-
-        if node_mac == self.__mac:
-            # print("-- From myself")
-            return
-
-        if self.__state == NodeState.Loading:
-            print("-- Drone is not ready")
-            return
-
-        node_id = data.get('node_id')
-        node_state = data.get('node_state')
-        node_state = NodeState(node_state)
-        node_position_x = data.get('node_position_x')
-        node_position_y = data.get('node_position_y')
-
-        # tentacle은 안 필요할 것 같음
-        # tentacle_id = data.get('tentacle_id')
-        # tentacle_state = data.get('tentacle_state')
-        # tentacle_state = TentacleState(tentacle_state)
-        # tentacle_within_pos = data.get('tentacle_within_pos')
-
-        node_signal = self.__get_signal_quality(node_mac, node_position_x, node_position_y)
-
-        # Test를 위해 node_signal을 반환하도록 함
-        print(str(node_mac) + ", " + str(node_position_x) + ", " + str(node_position_y) + ", " + str(node_signal))
-        return node_signal
-
-        log = f"-- From : {node_mac} / SQ : {node_signal} / node_id : {node_id}, node_state : {node_state}, node_position_x : {node_position_x}, node_position_y : {node_position_y}, tentacle_id : {tentacle_id}, tentacle_state : {tentacle_state} tentacle_within_pos : {tentacle_within_pos}"
-
-        print(log)
-
-        # write data to log.file
-        timestr = time.strftime("%Y%m%d-%H%M%S")
-        try:
-            if not (os.path.isdir(self.__log_directory)):
-                os.makedirs(os.path.join(self.__log_directory))
-        except OSError as e:
-            if e.errno != errno.EEXIST:
-                print("Failed to create directory !")
-                raise
-
-        with open(f'{os.getcwd()}/logs/{self.__id}_{self.__log_file}.log', 'a') as f:
-            log = f'{timestr} ID {self.__id} X {self.__position_x} Y {self.__position_y} STATE {self.__state} \n' + log + '\n'
-            f.write(log)
-
-        self.__add_node_status(node_id, node_state, node_position_x, node_position_y, node_signal, tentacle_id,
-                               tentacle_state, tentacle_within_pos)
-        # self.__update_status(node_id, node_state, node_signal, tentacle_id, tentacle_state, tentacle_within_pos)
-
-
 class CoreAction(gym.ActionWrapper):
     def __init__(self):
         self.number_of_nodes = 0
