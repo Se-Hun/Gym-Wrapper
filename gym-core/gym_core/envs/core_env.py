@@ -54,10 +54,11 @@ class CoreEnv(gym.Env):
             else:
                 reward.append(self.__calculate_reward(self.prev_signal_quality[index], self.signal_quality[index]))
 
-            print(reward)
+            # print(reward)
 
             # For Done
-            done = False
+            if self.prev_signal_quality == self.signal_quality:
+                done = True
 
             index = index + 1
         # for node_action in action:
