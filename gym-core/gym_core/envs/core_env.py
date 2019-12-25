@@ -24,7 +24,7 @@ class CoreEnv(gym.Env):
         # self.env = env
         # self.nodes = nodes # node들에 대한 리스트
         self.__loop = asyncio.get_event_loop()
-        self.action_space = Action()
+        self.action_space = CoreAction()
 
     def step(self, action):
         for node_action in action:
@@ -66,7 +66,7 @@ class CoreEnv(gym.Env):
         self.__loop = None
 
 
-class Action(gym.ActionWrapper):
+class CoreAction(gym.ActionWrapper):
     def __init__(self):
         self.number_of_nodes = 0
 
