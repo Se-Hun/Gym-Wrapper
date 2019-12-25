@@ -5,11 +5,12 @@ from gym.utils import seeding
 import os
 import asyncio
 
-Drone_Direction = {
-    "top" : [0, 5],
-    "bottom" : [0, -5],
-    "left" : [-5, 0],
-    "right" : [5, 0]
+### Action Type
+Action = {
+    0 : (0, 5), # 상
+    1 : (0, -5), # 하
+    2 : (-5, 0), # 좌
+    3 : (5, 0) # 우
 }
 
 class CoreEnv(gym.Env):
@@ -57,13 +58,13 @@ class CoreEnv(gym.Env):
         # __update_location() 이용!!
 
 
-class Action(gym.ActionWrapper):
-    def __init__(self, direction, size=5):
-        self.__direction = Drone_Direction[direction]
-        self.__size= size
-
-    def action(self, act):
-        return act
+# class Action(gym.ActionWrapper):
+#     def __init__(self, direction, size=5):
+#         self.__direction = Drone_Direction[direction]
+#         self.__size= size
+#
+#     def action(self, act):
+#         return act
 
 
 '''
