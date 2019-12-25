@@ -71,8 +71,8 @@ class Node():
         self.__mac = None
         self.__id = -1  # Node Id
 
-        # State가 필요할까?
-        # self.__state = NodeState.Loading  # Node State
+        # state를 살려둔 이유는 이걸로 Done을 파악하기 위해서!!
+        self.__state = NodeState.Loading  # Node State
 
         self.__position_x = None  # X = longitude
         self.__position_y = None  # Y = latitude
@@ -118,18 +118,18 @@ class Node():
         if 'ID' in config['CORE']:
             self.__id = int(config['CORE']['ID'])
 
-        # state가 필요할것으로는 보이지 않음
-        # if 'STATE' in config['CORE']:
-        #     self.__state = config['CORE']['STATE']
-        #
-        #     if self.__state == 'Origin':
-        #         self.__state = NodeState.Origin
-        #     elif self.__state == 'Destination':
-        #         self.__state = NodeState.Destination
-        #     elif self.__state == 'Free':
-        #         self.__state = NodeState.Free
-        #     elif self.__state == 'Orphan':
-        #         self.__state = NodeState.Orphan
+        # state를 살려둔 이유는 이걸로 Done을 파악하기 위해서
+        if 'STATE' in config['CORE']:
+            self.__state = config['CORE']['STATE']
+
+            if self.__state == 'Origin':
+                self.__state = NodeState.Origin
+            elif self.__state == 'Destination':
+                self.__state = NodeState.Destination
+            elif self.__state == 'Free':
+                self.__state = NodeState.Free
+            elif self.__state == 'Orphan':
+                self.__state = NodeState.Orphan
 
         if 'POSITION_X' in config['CORE']:
             self.__position_x = float(config['CORE']['POSITION_X'])
@@ -315,8 +315,7 @@ class Node():
             await asyncio.sleep(0.5)
             self.__position_x = self.__position_x + (vel_x * 0.3)
             self.__position_y = self.__position_y + (vel_y * 0.3)
-            self.__update_core_position(self.__id, self.__state, self.__tentacle_state, self.__position_x,
-                                        self.__position_y)
+            self.__update_core_position(self.__id, self.__state, self.__position_x, self.__position_y)
 
         elif self.__run_mode == REAL_MODE:
             self.__update_real_position(self.__position_x, self.__position_y, vel_x, vel_y)
@@ -349,8 +348,8 @@ class Node():
         return done
 
     # Render 함수에서 각각의 node의 id, state, tentacle_state, position_x, position_y를 받아서 이 함수를 호출하여 CORE-GUI를 갱신해주게 하자!
-    def __update_core_position(self, node_id, state, tentacle_state, position_x, position_y):
-        cmd = f'coresendmsg -a {self.__core_ip} NODE NUMBER={node_id} NAME={node_id}_{state}_{tentacle_state} X_POSITION={int(position_x)} Y_POSITION={int(position_y)}'
+    def __update_core_position(self, node_id, state, position_x, position_y):
+        cmd = f'coresendmsg -a {self.__core_ip} NODE NUMBER={node_id} NAME={node_id}_{state} X_POSITION={int(position_x)} Y_POSITION={int(position_y)}'
         # start cmd
         # print(cmd)
         os.popen(cmd)
