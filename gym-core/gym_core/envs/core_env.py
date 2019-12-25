@@ -46,21 +46,23 @@ class CoreEnv(gym.Env):
             # For Observation
             observation.append(node_action)
 
-            # For Reward
+            # For Reward and Done
             if not self.prev_signal_quality:
                 reward.append(0)
             elif not self.signal_quality:
                 reward.append(0)
             else:
                 reward.append(self.__calculate_reward(self.prev_signal_quality[index], self.signal_quality[index]))
+                done = self.__checkDone(self.prev_signal_quality[index], self.signal_quality[index])
 
             # print(reward)
 
-            # For Done
-            if self.prev_signal_quality == self.signal_quality:
-                done = True
+            # # For Done
+            # if self.prev_signal_quality == self.signal_quality:
+            #     done = True
 
             index = index + 1
+
         # for node_action in action:
             # node들에 대한 action을 뽑아오기
         # next_state, reward, done, info = self.env.step(action)
@@ -115,6 +117,20 @@ class CoreEnv(gym.Env):
                 reward = reward - 1
 
         return reward
+
+    def __checkDone(self, prev, signal):
+        key_list = list(prev.keys())
+        number_of_nodes = len(key_list)
+        done_count = 0
+
+        for key in key_list:
+            if (signal[key] > 0) and (prev[key] == signal[key]):
+                done_count = done_count + 1
+
+        if done_count == number_of_nodes:
+            return True
+
+        return False
 
 class CoreAction(gym.ActionWrapper):
     def __init__(self):
