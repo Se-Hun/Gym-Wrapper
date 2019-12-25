@@ -4,6 +4,7 @@ import configparser
 import math
 import json
 import time
+from socket import *
 from typing import Tuple
 
 from BioAIR.Drones.Exception import (
@@ -456,3 +457,11 @@ class Node():
         self.__add_node_status(node_id, node_state, node_position_x, node_position_y, node_signal, tentacle_id,
                                tentacle_state, tentacle_within_pos)
         # self.__update_status(node_id, node_state, node_signal, tentacle_id, tentacle_state, tentacle_within_pos)
+
+    # About communication
+    def connection_made(self, transport: asyncio.DatagramTransport):
+        self.__transport = transport
+        sock = self.__transport.get_extra_info('socket')
+        sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+        sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+        self.__broadcast()
