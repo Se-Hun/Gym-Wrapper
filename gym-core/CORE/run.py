@@ -19,7 +19,7 @@ if __name__ == "__main__":
     # Node_list.append(destination)
     Node_list.append(node1)
     Node_list.append(node2)
-
+    
     # Each drone has their own node object and run.
     # origin.run(0)
     # destination.run(0)
@@ -31,7 +31,7 @@ if __name__ == "__main__":
     for i_episode in range(20):
         observation = env.reset()
 
-        reward = 0
+        reward = [0, 0] # 초기 reward를 정의해줌
         # test
         # observation = ["bottom", "left"]
         for t in range(100):
