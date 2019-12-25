@@ -5,6 +5,8 @@ from gym.utils import seeding
 import os
 import asyncio
 
+from BioAIR.Drones.Node import Node
+
 class CoreEnv(gym.Env):
     metadata = {'render.modes':['human', 'CORE']}
 
@@ -29,7 +31,7 @@ class CoreEnv(gym.Env):
         if close == False:
             if mode == 'CORE':
                 for node in nodes:
-                    print(node.__id)
+                    print(node)
                     self.__loop.run_until_complete(node.__update_location(100, 200))
         else:
             return
