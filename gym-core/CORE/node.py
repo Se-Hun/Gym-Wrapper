@@ -408,7 +408,6 @@ class Node():
         self.__loop.call_later(1, self.__broadcast)
 
     # brodcast를 받기 위해서
-    '''
     def datagram_received(self, data, addr: Address):
 
         data = json.loads(data.decode())
@@ -461,7 +460,7 @@ class Node():
         self.__add_node_status(node_id, node_state, node_position_x, node_position_y, node_signal, tentacle_id,
                                tentacle_state, tentacle_within_pos)
         # self.__update_status(node_id, node_state, node_signal, tentacle_id, tentacle_state, tentacle_within_pos)
-'''
+
 
     # About communication
     def connection_made(self, transport: asyncio.DatagramTransport):
