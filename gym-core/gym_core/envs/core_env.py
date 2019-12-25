@@ -5,8 +5,6 @@ from gym.utils import seeding
 import os
 import asyncio
 
-from BioAIR.Drones.Node import Node
-
 class CoreEnv(gym.Env):
     metadata = {'render.modes':['human', 'CORE']}
 

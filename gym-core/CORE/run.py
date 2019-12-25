@@ -1,7 +1,7 @@
 import gym
 import gym_core
 
-from BioAIR.Drones.Node import Node
+from node import Node
 import os
 
 Node_list = []
