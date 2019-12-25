@@ -28,9 +28,12 @@ if __name__ == "__main__":
     env = gym.make('core-v0')
     for i_episode in range(20):
         observation = env.reset()
+
+        # test
+        observation = ["top", "bottom", "left", "right"]
         for t in range(100):
-            env.render(nodes=Node_list)
-            print(observation)
+            env.render(nodes=Node_list, next_state=observation)
+            # print(observation)
             action = env.action_space.sample()
             observation, reward, done, info = env.step(action)
             if done:
