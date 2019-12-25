@@ -124,7 +124,7 @@ class CoreEnv(gym.Env):
         done_count = 0
 
         for key in key_list:
-            if ((signal[key] > 0) and (prev[key] == signal[key])) or signal[key] == -9999:
+            if (signal[key] > 0) and (prev[key] == signal[key]):
                 done_count = done_count + 1
 
         if done_count == number_of_nodes:
