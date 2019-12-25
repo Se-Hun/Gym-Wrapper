@@ -28,13 +28,16 @@ class CoreEnv(gym.Env):
 
     def step(self, action):
         for node_action in action:
-            node_action
+            print(node_action)
+            observation = ["top", "bottom"]
+            reward = None
+            done = None
+            info = None
         # for node_action in action:
             # node들에 대한 action을 뽑아오기
         # next_state, reward, done, info = self.env.step(action)
         ## modify ...
-        # return next_state, reward, done, info
-        return
+        return observation, reward, done, info
 
     def reset(self):
         self.__init__()
