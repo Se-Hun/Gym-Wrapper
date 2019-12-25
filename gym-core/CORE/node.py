@@ -1,6 +1,9 @@
 import asyncio # 비동기 처리를 위한 라이브러리
 import os
 import configparser
+import math
+import json
+import time
 
 from BioAIR.Drones.Exception import (
     ConnectionToDroneException
@@ -16,6 +19,8 @@ from BioAIR.Drones.State import NodeState, TentacleState, EtcState
 # 		VelocityBodyYawspeed,
 # 		VelocityNedYaw,
 # )
+
+Address = Tuple[str, int]
 
 ### hyper parameter
 SAMPLENUM = 5
@@ -35,7 +40,7 @@ class Node():
         self.__log_directory = f'{os.getcwd()}/logs'
 
         # asyncio를 사용하지 않겠다.
-        # self.__loop = None
+        self.__loop = None
 
         # Node table
         self.__node_status = {}  # node_id, node_state, node_position_x, node_position_y, node_last_communication_time, node_signal
@@ -44,9 +49,9 @@ class Node():
         self.__initialization(self.__configuration_file)
 
         # Bioairing()을 사용하지 않을 것이므로~
-        # self.__loop = asyncio.get_event_loop()
-        # coro = self.__loop.create_datagram_endpoint(lambda: self, local_addr=('0.0.0.0', self.__port))
-        # asyncio.ensure_future(coro)
+        self.__loop = asyncio.get_event_loop()
+        coro = self.__loop.create_datagram_endpoint(lambda: self, local_addr=('0.0.0.0', self.__port))
+        asyncio.ensure_future(coro)
         # asyncio.ensure_future(self.__bioairing())
 
         if self.__run_mode == CORE_MODE:
@@ -353,3 +358,100 @@ class Node():
         # start cmd
         # print(cmd)
         os.popen(cmd)
+
+    # 신호 세기를 받아오기 위해서
+    def get_signal_quality(self, node_mac, node_position_x, node_position_y):
+        if self.__run_mode == CORE_MODE:  # CORE
+            rxSignal = math.sqrt((self.__position_x - node_position_x) ** 2 + (self.__position_y - node_position_y) ** 2)
+
+            if (rxSignal < self.__radio_range):
+                # rxSignal = 50 - (10 * math.log(rxSignal/4))
+                rxSignal = 1 - (rxSignal / self.__radio_range)
+            else:
+                rxSignal = UNKNOWN
+
+        elif self.__run_mode == REAL_MODE:  # Real
+            check_signal_cmd = f'iw dev {self.__nt_int} station get {node_mac} | grep signal: | grep -oE ([-]{{1}}[0-9]*){{1}}'
+            result = os.popen(check_signal_cmd).read()
+
+            if result == '':
+                rxSignal = UNKNOWN
+
+            else:
+                rxSignal = int(result.strip().split('\n')[0])
+                rxSignal = 1.0 + (rxSignal / 101)
+
+        return rxSignal
+
+    # 이거가 있어야 신호 세기를 주고 받을 수 있을 것 같음..
+    def __broadcast(self):
+        connectionInfo = ('<broadcast>', self.__port)
+
+        data = json.dumps({
+            'node_id': self.__id,
+            'node_state': self.__state.value,
+            'node_position_x': self.__position_x,
+            'node_position_y': self.__position_y,
+            'node_mac': self.__mac,
+            'tentacle_id': self.__tentacle_id,
+            'tentacle_state': self.__tentacle_state.value,
+            'tentacle_within_pos': self.__tentacle_within_pos,
+        })
+
+        self.__transport.sendto(data.encode(), connectionInfo)
+
+        # print(f"-- Broadcast : {self.__mac} / node_id : {self.__id}, node_state : {self.__state}, node_position_x : {self.__position_x}, node_position_y : {self.__position_y}, tentacle_id : {self.__tentacle_id}, tentacle_within_pos : {self.__tentacle_within_pos}')
+
+        self.__loop.call_later(1, self.__broadcast)
+
+    # brodcast를 받기 위해서
+    def datagram_received(self, data, addr: Address):
+
+        data = json.loads(data.decode())
+        node_mac = data.get('node_mac')
+
+        if node_mac == self.__mac:
+            # print("-- From myself")
+            return
+
+        if self.__state == NodeState.Loading:
+            print("-- Drone is not ready")
+            return
+
+        node_id = data.get('node_id')
+        node_state = data.get('node_state')
+        node_state = NodeState(node_state)
+        node_position_x = data.get('node_position_x')
+        node_position_y = data.get('node_position_y')
+        tentacle_id = data.get('tentacle_id')
+        tentacle_state = data.get('tentacle_state')
+        tentacle_state = TentacleState(tentacle_state)
+        tentacle_within_pos = data.get('tentacle_within_pos')
+
+        node_signal = self.__get_signal_quality(node_mac, node_position_x, node_position_y)
+
+        # Test를 위해 node_signal을 반환하도록 함
+        print(node_signal)
+        return node_signal
+
+        log = f"-- From : {node_mac} / SQ : {node_signal} / node_id : {node_id}, node_state : {node_state}, node_position_x : {node_position_x}, node_position_y : {node_position_y}, tentacle_id : {tentacle_id}, tentacle_state : {tentacle_state} tentacle_within_pos : {tentacle_within_pos}"
+
+        print(log)
+
+        # write data to log.file
+        timestr = time.strftime("%Y%m%d-%H%M%S")
+        try:
+            if not (os.path.isdir(self.__log_directory)):
+                os.makedirs(os.path.join(self.__log_directory))
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                print("Failed to create directory !")
+                raise
+
+        with open(f'{os.getcwd()}/logs/{self.__id}_{self.__log_file}.log', 'a') as f:
+            log = f'{timestr} ID {self.__id} X {self.__position_x} Y {self.__position_y} STATE {self.__state} \n' + log + '\n'
+            f.write(log)
+
+        self.__add_node_status(node_id, node_state, node_position_x, node_position_y, node_signal, tentacle_id,
+                               tentacle_state, tentacle_within_pos)
+        # self.__update_status(node_id, node_state, node_signal, tentacle_id, tentacle_state, tentacle_within_pos)

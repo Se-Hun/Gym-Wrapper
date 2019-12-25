@@ -25,6 +25,7 @@ class CoreEnv(gym.Env):
         # self.nodes = nodes # node들에 대한 리스트
         self.__loop = asyncio.get_event_loop()
         self.action_space = CoreAction()
+        self.previous_signal_quality = []
 
     def step(self, action):
         observation = []
@@ -44,6 +45,7 @@ class CoreEnv(gym.Env):
     def reset(self):
         self.__init__()
         self.__state = None
+        self.previous_signal_quality = []
 
         return self.__state
 
@@ -52,7 +54,9 @@ class CoreEnv(gym.Env):
             if mode == 'CORE':
                 index = 0
                 self.__state = next_state
+                self.previous_signal_quality = []
                 for node in nodes:
+                    self.previous_signal_quality.append(node.get_signal_quality())
                     if self.__state == None:
                         direction = Action['stop']
                     else:
@@ -73,6 +77,9 @@ class CoreEnv(gym.Env):
 
     def close(self):
         self.__loop = None
+
+    def calculate_reward(self):
+        return
 
 
 class CoreAction(gym.ActionWrapper):
