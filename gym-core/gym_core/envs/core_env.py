@@ -47,7 +47,13 @@ class CoreEnv(gym.Env):
             observation.append(node_action)
 
             # For Reward
-            reward.append(self.__calculate_reward(self.prev_signal_quality[index], self.signal_quality[index]))
+            if not self.prev_signal_quality:
+                reward.append(0)
+            elif not self.signal_quality:
+                reward.append(0)
+            else:
+                reward.append(self.__calculate_reward(self.prev_signal_quality[index], self.signal_quality[index]))
+
             print(reward)
 
             # For Done
