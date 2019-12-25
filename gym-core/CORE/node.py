@@ -395,9 +395,10 @@ class Node():
             'node_position_x': self.__position_x,
             'node_position_y': self.__position_y,
             'node_mac': self.__mac,
-            'tentacle_id': self.__tentacle_id,
-            'tentacle_state': self.__tentacle_state.value,
-            'tentacle_within_pos': self.__tentacle_within_pos,
+            # tentacle은 안 필요할 것 같음
+            # 'tentacle_id': self.__tentacle_id,
+            # 'tentacle_state': self.__tentacle_state.value,
+            # 'tentacle_within_pos': self.__tentacle_within_pos,
         })
 
         self.__transport.sendto(data.encode(), connectionInfo)
@@ -425,10 +426,12 @@ class Node():
         node_state = NodeState(node_state)
         node_position_x = data.get('node_position_x')
         node_position_y = data.get('node_position_y')
-        tentacle_id = data.get('tentacle_id')
-        tentacle_state = data.get('tentacle_state')
-        tentacle_state = TentacleState(tentacle_state)
-        tentacle_within_pos = data.get('tentacle_within_pos')
+
+        # tentacle은 안 필요할 것 같음
+        # tentacle_id = data.get('tentacle_id')
+        # tentacle_state = data.get('tentacle_state')
+        # tentacle_state = TentacleState(tentacle_state)
+        # tentacle_within_pos = data.get('tentacle_within_pos')
 
         node_signal = self.__get_signal_quality(node_mac, node_position_x, node_position_y)
 
