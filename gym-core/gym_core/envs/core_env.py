@@ -27,9 +27,11 @@ class CoreEnv(gym.Env):
         self.action_space = CoreAction()
 
     def step(self, action):
+        observation = []
+
         for node_action in action:
             print(node_action)
-            observation = ["top", "bottom"]
+            observation.append(node_action)
             reward = None
             done = None
             info = None
