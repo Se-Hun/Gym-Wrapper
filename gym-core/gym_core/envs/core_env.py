@@ -32,7 +32,7 @@ class CoreEnv(gym.Env):
             if mode == 'CORE':
                 for node in nodes:
                     print(node)
-                    await self.__loop.run_until_complete(node.__update_location(100, 200))
+                    self.__loop.run_until_complete(node.update_location(100, 200))
         else:
             return
         # Render 함수에서 각각의 node의 id, state, tentacle_state, position_x, position_y를 받아서 이 함수를 호출하여 CORE-GUI를 갱신해주게 하자!

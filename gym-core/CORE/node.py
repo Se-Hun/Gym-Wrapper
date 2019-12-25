@@ -283,7 +283,7 @@ class Node():
             self.__altitude = position.altitude_m
 
 
-    async def __update_location(self, vel_x, vel_y):
+    async def update_location(self, vel_x, vel_y):
         expected_x, expected_y, wp_latitude, wp_longtitude = 0, 0, 0, 0
         wait_time = 0
 
