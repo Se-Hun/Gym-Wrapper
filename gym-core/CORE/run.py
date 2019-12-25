@@ -36,8 +36,8 @@ if __name__ == "__main__":
         # observation = ["bottom", "left"]
         for t in range(100):
             env.render(nodes=Node_list, next_state=observation)
-            # print(observation)
-            action = env.action_space.sample(Number_of_Nodes, reward, action) # Node 갯수로 action 받아옴, reward에 따라 샘플을 다르게 뽑음, 이전 action을 알아야해서 넣어줌
+            print(observation)
+            action = env.action_space.sample(Number_of_Nodes, reward, observation) # Node 갯수로 action 받아옴, reward에 따라 샘플을 다르게 뽑음, 이전 observation을 알아야해서 넣어줌
             print(reward)
             print(action)
             observation, reward, done, info = env.step(action)
